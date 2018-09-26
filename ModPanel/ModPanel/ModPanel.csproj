@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ModPanel.Data\ModPanel.Data.csproj" />
+    <ProjectReference Include="..\ModPanel.Utilities\ModPanel.Utilities.csproj" />
     <ProjectReference Include="..\SimpleMvc.Framework\SimpleMvc.Framework.csproj" />
   </ItemGroup>
 

@@ -1,5 +1,6 @@
 ﻿namespace ModPanel.Controllers
 {
+    using System.Runtime.CompilerServices;
     using Models.BindingModels;
     using Models.Enums;
     using Services.Contracts;
@@ -43,6 +44,41 @@
             else
             {
                 this.ShowError(EmailExistsError);
+                return this.View();
+            }
+        }
+
+        [HttpGet]
+        public IActionResult Login() => this.User.IsAuthenticated ? this.RedirectToHome() : this.View();
+
+        [HttpPost]
+        public IActionResult Login(UserLoginBindingModel model)
+        {
+            if (this.User.IsAuthenticated)
+            {
+                return this.RedirectToHome();
+            }
+
+            if (!this.IsValidModel(model))
+            {
+                this.ShowError(LoginError);
+                return this.View();
+            }
+
+            if (!this.userService.UserIsApproved(model.Email))
+            {
+                this.ShowError(UserIsNotApprovedError);
+                return this.View();
+            }
+
+            if (this.userService.UserExists(model.Email, model.Password))
+            {
+                this.SignIn(model.Email);
+                return this.RedirectToHome();
+            }
+            else
+            {
+                this.ShowError(LoginError);
                 return this.View();
             }
         }
