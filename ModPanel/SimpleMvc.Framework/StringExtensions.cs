@@ -1,4 +1,4 @@
-﻿namespace SimpleMvc.Common
+﻿namespace SimpleMvc.Framework
 {
     public static class StringExtensions
     {

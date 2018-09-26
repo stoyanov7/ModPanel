@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimpleMvc.Common\SimpleMvc.Common.csproj" />
     <ProjectReference Include="..\WebServer\WebServer.csproj" />
   </ItemGroup>
 

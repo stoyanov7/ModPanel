@@ -4,12 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using SimpleMvc.Common;
-    using SimpleMvc.Framework.Attributes.Methods;
+    using Attributes.Methods;
     using SimpleMvc.Framework.Attributes.Security;
-    using SimpleMvc.Framework.Controllers;
-    using SimpleMvc.Framework.Interfaces;
-    using SimpleMvc.Framework.Validation;
+    using Controllers;
+    using Interfaces;
+    using Validation;
     using WebServer.Contracts;
     using WebServer.Enums;
     using WebServer.Exceptions;
