@@ -9,8 +9,13 @@
     public class AdminController : BaseController
     {
         private readonly IUserService userService;
+        private readonly IPostService postService;
 
-        public AdminController(IUserService userService) => this.userService = userService;
+        public AdminController(IUserService userService, IPostService postService)
+        {
+            this.userService = userService;
+            this.postService = postService;
+        }
 
         [HttpGet]
         public IActionResult Users()
@@ -48,6 +53,30 @@
             this.userService.Approve(id);
 
             return this.RedirectToAction("/admin/users");
+        }
+
+        public IActionResult Posts()
+        {
+            if (!this.IsAdmin)
+            {
+                return this.RedirectToLogin();
+            }
+
+            var rows = this.postService
+                .AllPost()
+                .Select(p => $@"
+                    <tr>
+                        <td>{p.Id}</td>
+                        <td>{p.Title}</td>
+                        <td>
+                            <a class=""btn btn-warning btn-sm"" href=""/admin/edit?id={p.Id}"">Edit</a>
+                            <a class=""btn btn-danger btn-sm"" href=""/admin/delete?id={p.Id}"">Delete</a>
+                        </td>
+                    </tr>");
+
+            this.Model.Data["posts"] = string.Join(string.Empty, rows);
+
+            return this.View();
         }
     }
 }

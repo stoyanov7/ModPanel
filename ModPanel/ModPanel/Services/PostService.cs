@@ -1,8 +1,11 @@
 ﻿namespace ModPanel.Services
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using Contracts;
     using Data;
     using Models;
+    using Models.ViewModels;
     using Utilities;
 
     public class PostService : IPostService
@@ -26,5 +29,15 @@
                 this.context.SaveChanges();
             }
         }
+
+        public IEnumerable<PostListingViewModel> AllPost()
+            => this.context
+                .Posts
+                .Select(p => new PostListingViewModel
+                {
+                    Id = p.Id,
+                    Title = p.Title
+                })
+                .ToList();
     }
 }
