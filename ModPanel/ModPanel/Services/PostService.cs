@@ -5,6 +5,7 @@
     using Contracts;
     using Data;
     using Models;
+    using Models.BindingModels;
     using Models.ViewModels;
     using Utilities;
 
@@ -31,13 +32,54 @@
         }
 
         public IEnumerable<PostListingViewModel> AllPost()
-            => this.context
-                .Posts
-                .Select(p => new PostListingViewModel
+        {
+            using (this.context)
+            {
+                return this.context
+                        .Posts
+                        .Select(p => new PostListingViewModel
+                        {
+                            Id = p.Id,
+                            Title = p.Title
+                        })
+                        .ToList();
+            }
+        }
+
+        public PostBindingModel GetById(int id)
+        {
+            using (this.context)
+            {
+                return this.context
+                        .Posts
+                        .Where(p => p.Id == id)
+                        .Select(p => new PostBindingModel
+                        {
+                            Title = p.Title,
+                            Content = p.Content
+                        })
+                        .FirstOrDefault();
+            }
+        }
+
+        public void Update(int id, string title, string content)
+        {
+            using (this.context)
+            {
+                var post = this.context
+                    .Posts
+                    .Find(id);
+
+                if (post == null)
                 {
-                    Id = p.Id,
-                    Title = p.Title
-                })
-                .ToList();
+                    return;
+                }
+
+                post.Title = title;
+                post.Content = content;
+
+                this.context.SaveChanges();
+            }
+        }
     }
 }

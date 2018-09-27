@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class CreatePostBindingModel
+    public class PostBindingModel
     {
         [Required]
         [StringLength(100, MinimumLength = 3)]

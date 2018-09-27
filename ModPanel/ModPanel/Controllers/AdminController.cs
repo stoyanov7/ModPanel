@@ -1,6 +1,7 @@
 ﻿namespace ModPanel.Controllers
 {
     using System.Linq;
+    using Models.BindingModels;
     using Services.Contracts;
     using SimpleMvc.Framework.Attributes.Methods;
     using SimpleMvc.Framework.Interfaces;
@@ -8,6 +9,8 @@
 
     public class AdminController : BaseController
     {
+        private const string EditError = "<p>Check your form for errors.</p><p>Title must begin with uppercase letter and has length between 3 and 100 symbols (inclusive).</p><p>Content must be more than 10 symbols (inclusive).</p>";
+
         private readonly IUserService userService;
         private readonly IPostService postService;
 
@@ -77,6 +80,46 @@
             this.Model.Data["posts"] = string.Join(string.Empty, rows);
 
             return this.View();
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            if (!this.IsAdmin)
+            {
+                return this.RedirectToLogin();
+            }
+
+            var post = this.postService.GetById(id);
+
+            if (post == null)
+            {
+                return this.RedirectToHome();
+            }
+
+            this.Model.Data["title"] = post.Title;
+            this.Model.Data["content"] = post.Content;
+
+            return this.View();
+        }
+
+        [HttpPost]
+        public IActionResult Edit(int id, PostBindingModel model)
+        {
+            if (!this.IsAdmin)
+            {
+                return this.RedirectToLogin();
+            }
+
+            if (!this.IsValidModel(model))
+            {
+                this.ShowError(EditError);
+                return this.View();
+            }
+
+            this.postService.Update(id, model.Title, model.Content);
+
+            return this.RedirectToAction("/admin/posts");
         }
     }
 }

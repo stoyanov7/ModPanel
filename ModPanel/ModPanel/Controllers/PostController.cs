@@ -20,7 +20,7 @@
 
         [HttpPost]
         [AuthorizeLogin]
-        public IActionResult Create(CreatePostBindingModel model)
+        public IActionResult Create(PostBindingModel model)
         {
             if (!this.IsValidModel(model))
             {
