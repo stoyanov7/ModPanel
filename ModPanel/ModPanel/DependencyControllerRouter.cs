@@ -29,6 +29,7 @@
 
             container.Register<IUserService, UserService>();
             container.Register<IPostService, PostService>();
+            container.Register<ILogService, LogService>();
             container.Register<ModPanelContext>(Lifestyle.Scoped);
 
             container.Verify();

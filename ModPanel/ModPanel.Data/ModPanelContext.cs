@@ -7,9 +7,11 @@
 
     public class ModPanelContext : DbContext
     {
-       public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public DbSet<Post> Posts { get; set; }
+
+        public DbSet<Log> Logs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -17,7 +19,7 @@
             {
                 var configuration = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json")
+                    .AddJsonFile(@"appsettings.json")
                     .Build();
 
                 var connectionString = configuration.GetConnectionString("DefaultConnection");

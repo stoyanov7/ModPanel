@@ -15,6 +15,16 @@
 
         public UserService() => this.context = new ModPanelContext();
 
+        /// <summary>
+        /// Register new user in database. The first registered user become an admin.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <param name="position"></param>
+        /// <returns>
+        /// True if the user is registered successfully.
+        /// False if the email is in the database.
+        /// </returns>
         public bool Create(string email, string password, PositionType position)
         {
             if (this.context.Users.Any(u => u.Email == email))
@@ -40,11 +50,22 @@
             return true;
         }
 
+        /// <summary>
+        /// Check if user is approved.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns>True if the user is approved, otherwise false.</returns>
         public bool UserIsApproved(string email)
             => this.context
                 .Users
                 .Any(u => u.Email == email && u.IsApproved);
 
+        /// <summary>
+        /// Check if email and password hash exist in the database.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public bool UserExists(string email, string password)
         {
             var passwordHash = PasswordUtilities.GetPasswordHash(password);

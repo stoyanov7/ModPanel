@@ -5,7 +5,7 @@
 
     public static class EnumUtilities
     {
-        public static string ToFriendlyName(this PositionType position)
+        public static string PositionToFriendlyName(this PositionType position)
         {
             switch (position)
             {
@@ -21,6 +21,25 @@
                     return "Marketing Specialist";
                 default:
                     throw new InvalidOperationException($"Invalid position type {position}.");
+            }
+        }
+
+        public static string ToViewClassName(this LogType type)
+        {
+            switch (type)
+            {
+                case LogType.CreatePost:
+                    return "success";
+                case LogType.EditPost:
+                    return "warning";
+                case LogType.DeletePost:
+                    return "danger";
+                case LogType.UserApproval:
+                    return "success";
+                case LogType.OpenMenu:
+                    return "primary";
+                default:
+                    throw new InvalidOperationException($"Invalid log type {type}.");
             }
         }
     }

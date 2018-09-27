@@ -3,6 +3,7 @@
     using System.Linq;
     using Attributes;
     using Models.BindingModels;
+    using Models.Enums;
     using Services.Contracts;
     using SimpleMvc.Framework.Attributes.Methods;
     using SimpleMvc.Framework.Interfaces;
@@ -14,11 +15,13 @@
 
         private readonly IUserService userService;
         private readonly IPostService postService;
+        private readonly ILogService logService;
 
-        public AdminController(IUserService userService, IPostService postService)
+        public AdminController(IUserService userService, IPostService postService, ILogService logService)
         {
             this.userService = userService;
             this.postService = postService;
+            this.logService = logService;
         }
 
         [HttpGet]
@@ -27,18 +30,10 @@
         {
             var rows = this.userService
                 .All()
-                .Select(u => $@"
-                    <tr>
-                        <td>{u.Id}</td>
-                        <td>{u.Email}</td>
-                        <td>{u.Position.ToFriendlyName()}</td>
-                        <td>{u.Posts}</td>
-                        <td>
-                            {(u.IsApproved ? string.Empty : $@"<a class=""btn btn-primary btn-sm"" href=""/admin/approve?id={u.Id}"">Approve</a>")}
-                        </td>
-                    </tr>");
+                .Select(u => u.UsersToHtml());
 
             this.Model.Data["users"] = string.Join(string.Empty, rows);
+            this.Log(LogType.OpenMenu, nameof(this.Users));
 
             return this.View();
         }
@@ -46,7 +41,12 @@
         [AuthorizeLogin]
         public IActionResult Approve(int id)
         {
-            this.userService.Approve(id);
+            var userEmail = this.userService.Approve(id);
+
+            if (userEmail != null)
+            {
+                this.Log(LogType.UserApproval, userEmail);
+            }
 
             return this.RedirectToAction("/admin/users");
         }
@@ -56,17 +56,10 @@
         {
             var rows = this.postService
                 .AllPost()
-                .Select(p => $@"
-                    <tr>
-                        <td>{p.Id}</td>
-                        <td>{p.Title}</td>
-                        <td>
-                            <a class=""btn btn-warning btn-sm"" href=""/admin/edit?id={p.Id}"">Edit</a>
-                            <a class=""btn btn-danger btn-sm"" href=""/admin/delete?id={p.Id}"">Delete</a>
-                        </td>
-                    </tr>");
+                .Select(p => p.PostsToHtml());
 
             this.Model.Data["posts"] = string.Join(string.Empty, rows);
+            this.Log(LogType.OpenMenu, nameof(this.Posts));
 
             return this.View();
         }
@@ -99,6 +92,7 @@
             }
 
             this.postService.Update(id, model.Title, model.Content);
+            this.Log(LogType.EditPost, model.Title);
 
             return this.RedirectToAction("/admin/posts");
         }
@@ -130,9 +124,27 @@
                 return this.View();
             }
 
-            this.postService.Delete(id);
+            var post = this.postService.Delete(id);
+
+            if (post != null)
+            {
+                this.Log(LogType.DeletePost, post);
+            }
 
             return this.RedirectToAction("/admin/posts");
+        }
+
+        public IActionResult Log()
+        {
+            this.Log(LogType.OpenMenu, nameof(Log));
+
+            var rows = this.logService
+                .AllLogs()
+                .Select(l => l.LogsToHtml());
+
+            this.Model.Data["logs"] = string.Join(string.Empty, rows);
+
+            return this.View();
         }
     }
 }

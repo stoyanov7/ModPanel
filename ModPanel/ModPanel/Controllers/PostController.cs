@@ -2,6 +2,7 @@
 {
     using Attributes;
     using Models.BindingModels;
+    using Models.Enums;
     using Services.Contracts;
     using SimpleMvc.Framework.Attributes.Methods;
     using SimpleMvc.Framework.Interfaces;
@@ -29,6 +30,11 @@
             }
 
             this.postService.Create(model.Title, model.Content, this.DbUser.Id);
+
+            if (this.IsAdmin)
+            {
+                this.Log(LogType.CreatePost, model.Title);
+            }
 
             return this.RedirectToHome();
         }

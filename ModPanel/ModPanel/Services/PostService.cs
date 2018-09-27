@@ -15,6 +15,12 @@
 
         public PostService() => this.context = new ModPanelContext();
 
+        /// <summary>
+        /// Create new post and save it to database.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="content"></param>
+        /// <param name="userId"></param>
         public void Create(string title, string content, int userId)
         {
             using (this.context)

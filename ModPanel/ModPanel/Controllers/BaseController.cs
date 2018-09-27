@@ -3,13 +3,20 @@
     using System.Linq;
     using Data;
     using Models;
+    using Models.Enums;
+    using Services;
+    using Services.Contracts;
     using SimpleMvc.Framework.Controllers;
     using SimpleMvc.Framework.Interfaces;
 
     public class BaseController : Controller
     {
+        private readonly ILogService logService;
+
         protected BaseController()
         {
+            this.logService = new LogService();
+
             this.Model.Data["anonymousDisplay"] = "flex";
             this.Model.Data["userDisplay"] = "none";
             this.Model.Data["adminDisplay"] = "none";
@@ -29,6 +36,10 @@
             this.Model.Data["show-error"] = "block";
             this.Model.Data["error"] = error;
         }
+
+        protected void Log(LogType type, string additionalInformation)
+            => this.logService
+                .Create(this.DbUser.Email, type, additionalInformation);
 
         public override void OnAuthentication()
         {
