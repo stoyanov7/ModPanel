@@ -28,6 +28,7 @@
             var container = router.Container;
 
             container.Register<IUserService, UserService>();
+            container.Register<IPostService, PostService>();
             container.Register<ModPanelContext>(Lifestyle.Scoped);
 
             container.Verify();
