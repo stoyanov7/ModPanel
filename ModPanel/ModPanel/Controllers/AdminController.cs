@@ -1,6 +1,7 @@
 ﻿namespace ModPanel.Controllers
 {
     using System.Linq;
+    using Attributes;
     using Models.BindingModels;
     using Services.Contracts;
     using SimpleMvc.Framework.Attributes.Methods;
@@ -21,13 +22,9 @@
         }
 
         [HttpGet]
+        [AuthorizeLogin]
         public IActionResult Users()
         {
-            if (!this.IsAdmin)
-            {
-                return this.RedirectToLogin();
-            }
-
             var rows = this.userService
                 .All()
                 .Select(u => $@"
@@ -46,25 +43,17 @@
             return this.View();
         }
 
+        [AuthorizeLogin]
         public IActionResult Approve(int id)
         {
-            if (!this.IsAdmin)
-            {
-                return this.RedirectToLogin();
-            }
-
             this.userService.Approve(id);
 
             return this.RedirectToAction("/admin/users");
         }
 
+        [AuthorizeLogin]
         public IActionResult Posts()
         {
-            if (!this.IsAdmin)
-            {
-                return this.RedirectToLogin();
-            }
-
             var rows = this.postService
                 .AllPost()
                 .Select(p => $@"
@@ -83,13 +72,9 @@
         }
 
         [HttpGet]
+        [AuthorizeLogin]
         public IActionResult Edit(int id)
         {
-            if (!this.IsAdmin)
-            {
-                return this.RedirectToLogin();
-            }
-
             var post = this.postService.GetById(id);
 
             if (post == null)
@@ -104,13 +89,9 @@
         }
 
         [HttpPost]
+        [AuthorizeLogin]
         public IActionResult Edit(int id, PostBindingModel model)
         {
-            if (!this.IsAdmin)
-            {
-                return this.RedirectToLogin();
-            }
-
             if (!this.IsValidModel(model))
             {
                 this.ShowError(EditError);
@@ -118,6 +99,38 @@
             }
 
             this.postService.Update(id, model.Title, model.Content);
+
+            return this.RedirectToAction("/admin/posts");
+        }
+
+        [HttpGet]
+        [AuthorizeLogin]
+        public IActionResult Delete(int id)
+        {
+            var post = this.postService.GetById(id);
+
+            if (post == null)
+            {
+                return this.RedirectToHome();
+            }
+
+            this.Model.Data["title"] = post.Title;
+            this.Model.Data["content"] = post.Content;
+
+            return this.View();
+        }
+
+        [HttpPost]
+        [AuthorizeLogin]
+        public IActionResult Delete(int id, PostBindingModel model)
+        {
+            if (!this.IsValidModel(model))
+            {
+                this.ShowError(EditError);
+                return this.View();
+            }
+
+            this.postService.Delete(id);
 
             return this.RedirectToAction("/admin/posts");
         }

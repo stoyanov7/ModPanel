@@ -1,6 +1,5 @@
 ﻿namespace ModPanel.Controllers
 {
-    using System.Runtime.CompilerServices;
     using Models.BindingModels;
     using Models.Enums;
     using Services.Contracts;

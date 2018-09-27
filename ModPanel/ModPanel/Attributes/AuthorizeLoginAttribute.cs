@@ -8,7 +8,7 @@
     {
         public override IHttpResponse GetResponse(string message)
         {
-            return new RedirectResponse("/users/login");
+            return new RedirectResponse("/user/login");
         }
     }
 }

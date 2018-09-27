@@ -75,10 +75,28 @@
                     return;
                 }
 
-                post.Title = title;
+                post.Title = title.Capitalize();
                 post.Content = content;
 
                 this.context.SaveChanges();
+            }
+        }
+
+        public string Delete(int id)
+        {
+            using (this.context)
+            {
+                var post = this.context.Posts.Find(id);
+
+                if (post == null)
+                {
+                    return null;
+                }
+
+                this.context.Posts.Remove(post);
+                this.context.SaveChanges();
+
+                return post.Title;
             }
         }
     }

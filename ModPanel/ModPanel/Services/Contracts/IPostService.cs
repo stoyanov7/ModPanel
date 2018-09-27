@@ -13,5 +13,7 @@
         PostBindingModel GetById(int id);
 
         void Update(int id, string title, string content);
+
+        string Delete(int id);
     }
 }
