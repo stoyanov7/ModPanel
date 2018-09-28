@@ -6,6 +6,11 @@
     public class HomeController : BaseController
     {
         [HttpGet]
-        public IActionResult Index() => this.View();
+        public IActionResult Index()
+        {
+            this.Model.Data["guestDisplay"] = "block";
+
+            return this.View();
+        }
     }
 }

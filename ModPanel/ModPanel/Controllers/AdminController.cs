@@ -7,7 +7,6 @@
     using Services.Contracts;
     using SimpleMvc.Framework.Attributes.Methods;
     using SimpleMvc.Framework.Interfaces;
-    using Utilities;
 
     public class AdminController : BaseController
     {
@@ -134,6 +133,7 @@
             return this.RedirectToAction("/admin/posts");
         }
 
+        [AuthorizeLogin]
         public IActionResult Log()
         {
             this.Log(LogType.OpenMenu, nameof(Log));
