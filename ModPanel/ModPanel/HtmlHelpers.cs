@@ -1,5 +1,6 @@
 ﻿namespace ModPanel
 {
+    using System;
     using Models.ViewModels;
     using Utilities;
 
@@ -38,6 +39,27 @@
                     <div class=""card border-{log.Type.ToViewClassName()} mb-1"">
                         <div class=""card-body"">
                             <p class=""card-text"">{log}</p>
+                        </div>
+                    </div>";
+        }
+
+        public static string HomePostsToHtml(this HomePostViewModel p)
+        {
+            return $@"
+                    <div class=""card border-primary mb-3"">
+                        <div class=""card-body text-primary"">
+                            <h4 class=""card-title"">{p.Title}</h4>
+                            <p class=""card-text"">
+                                {p.Content}
+                            </p>
+                        </div>
+                        <div class=""card-footer bg-transparent text-right"">
+                            <span class=""text-muted"">
+                                Created on {(p.CreatedOn ?? DateTime.UtcNow).ToShortDateString()} by
+                                <em>
+                                    <strong>{p.CreatedBy}</strong>
+                                </em>
+                            </span>
                         </div>
                     </div>";
         }

@@ -1,5 +1,6 @@
 ﻿namespace ModPanel.Services
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Contracts;
@@ -29,7 +30,8 @@
                 {
                     Title = title.Capitalize(),
                     Content = content,
-                    UserId = userId
+                    UserId = userId,
+                    CreatedOn = DateTime.UtcNow
                 };
 
                 this.context.Posts.Add(post);
@@ -50,6 +52,26 @@
                         })
                         .ToList();
             }
+        }
+
+        public IEnumerable<HomePostViewModel> AllWithDetails(string search = null)
+        {
+            var query = this.context.Posts.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(p => p.Title.ToLower().Contains(search.ToLower()));
+            }
+
+            return query
+                .OrderByDescending(p => p.Id)
+                .Select(h => new HomePostViewModel
+                {
+                    Title = h.Title,
+                    Content = h.Content,
+                    CreatedBy = h.User.Email
+                })
+                .ToList();
         }
 
         public PostBindingModel GetById(int id)

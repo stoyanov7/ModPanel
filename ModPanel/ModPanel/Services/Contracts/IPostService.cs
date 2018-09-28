@@ -10,6 +10,8 @@
 
         IEnumerable<PostListingViewModel> AllPost();
 
+        IEnumerable<HomePostViewModel> AllWithDetails(string search = null);
+
         PostBindingModel GetById(int id);
 
         void Update(int id, string title, string content);
