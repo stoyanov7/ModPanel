@@ -1,5 +1,6 @@
 ﻿namespace ModPanel.Models
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
 
     public class Post
@@ -18,5 +19,7 @@
 
         public int UserId { get; set; }
         public User User { get; set; }
+
+        public DateTime? CreatedOn { get; set; }
     }
 }
