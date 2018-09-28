@@ -1,5 +1,6 @@
 ﻿namespace ModPanel.Controllers
 {
+    using System;
     using System.Linq;
     using Data;
     using Models;
@@ -21,6 +22,7 @@
             this.Model.Data["userDisplay"] = "none";
             this.Model.Data["adminDisplay"] = "none";
             this.Model.Data["show-error"] = "none";
+            this.Model.Data["year"] = DateTime.Now.Year.ToString();
         }
 
         protected User DbUser { get; private set; }
